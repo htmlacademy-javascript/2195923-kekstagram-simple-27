@@ -1,6 +1,6 @@
 # Личный проект «Кекстаграм (простой)»
 
-* Студент: [Дмитрий](https://up.htmlacademy.ru/javascript/27/user/2195923).
+* Студент: Дмитрий Луцишин (https://up.htmlacademy.ru/javascript/27/user/2195923).
 * Наставник: Владимир Артюхов (https://htmlacademy.ru/profile/artman).
 
 ---
