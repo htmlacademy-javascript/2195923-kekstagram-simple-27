@@ -1,4 +1,8 @@
 function getRandomInteger(from, to) {
+  if (typeof from !== 'number' || typeof to !== 'number') {
+    return NaN;
+  }
+
   if (from < 0 || to < 0) {
     return NaN;
   }
@@ -12,7 +16,6 @@ function checkMaxStringLength(string, maxLength) {
   }
   return null;
 }
-
 
 getRandomInteger(5, 10);
 checkMaxStringLength('test', 5);
