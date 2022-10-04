@@ -11,10 +11,10 @@ function generateRandomInteger(from, to) {
 }
 
 function checkMaxStringLength(string, maxLength) {
-  if (typeof string === 'string' && typeof maxLength === 'number' && maxLength >= 0) {
-    return string.length <= maxLength;
+  if (typeof string !== 'string' || typeof maxLength !== 'number' || maxLength < 0) {
+    return null;
   }
-  return null;
+  return string.length <= maxLength;
 }
 
 generateRandomInteger(5, 10);
