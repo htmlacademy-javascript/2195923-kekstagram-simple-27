@@ -46,7 +46,7 @@ function createPhoto(photo, index) {
   return {
     id: idPhotos[index],
     url: `photos/${urlPhotos[index]}.jpg`,
-    description: generateString(0, 100),
+    description: generateString(20, 140),
     likes: generateRandomInteger(15, 200),
     comments: generateRandomInteger(0, 200),
   };
