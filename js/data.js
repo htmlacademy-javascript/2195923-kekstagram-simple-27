@@ -8,7 +8,7 @@ function createPhoto(photo, index) {
   return {
     id: idPhotos[index],
     url: `photos/${urlPhotos[index]}.jpg`,
-    description: generateString(20, 140),
+    description: generateString(),
     likes: generateRandomInteger(15, 200),
     comments: generateRandomInteger(0, 200),
   };
