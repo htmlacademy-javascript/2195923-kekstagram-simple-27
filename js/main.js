@@ -19,7 +19,7 @@ function checkMaxStringLength(string, maxLength) {
   return string.length <= maxLength;
 }
 
-function sattoloCycle(items) {
+function shuffleArray(items) {
   for (let i = items.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * i);
     const tmp = items[i];
@@ -39,8 +39,8 @@ function generateString(minLength, maxLength) {
 }
 
 const orderedArrayNumbers = Array.from({length: 25}, (element, index) => ++index);
-const idPhotos = sattoloCycle(orderedArrayNumbers.slice());
-const urlPhotos = sattoloCycle(orderedArrayNumbers.slice());
+const idPhotos = shuffleArray(orderedArrayNumbers.slice());
+const urlPhotos = shuffleArray(orderedArrayNumbers.slice());
 
 function createPhoto(photo, index) {
   return {
