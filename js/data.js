@@ -19,7 +19,7 @@ const orderedArrayNumbers = Array.from({ length: 25 }, (element, index) => ++ind
 const idPhotos = shuffleArray(orderedArrayNumbers.slice());
 const urlPhotos = shuffleArray(orderedArrayNumbers.slice());
 
-function createPhoto(photo, index) {
+function createPhoto(_, index) {
   return {
     id: idPhotos[index],
     url: `photos/${urlPhotos[index]}.jpg`,
