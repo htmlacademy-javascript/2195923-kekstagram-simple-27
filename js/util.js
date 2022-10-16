@@ -1,4 +1,4 @@
-function generateRandomInteger(from, to) {
+const generateRandomInteger = (from, to) => {
   if (typeof from !== 'number' || typeof to !== 'number') {
     return NaN;
   }
@@ -8,16 +8,16 @@ function generateRandomInteger(from, to) {
   }
 
   return Math.round(Math.random() * Math.abs(to - from) + from);
-}
+};
 
-function checkMaxStringLength(string, maxLength) {
+const checkMaxStringLength = (string, maxLength) => {
   if (typeof string !== 'string' || typeof maxLength !== 'number' || maxLength < 0) {
     return null;
   }
   return string.length <= maxLength;
-}
+};
 
-function shuffleArray(items) {
+const shuffleArray = (items) => {
   for (let i = items.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * i);
     const tmp = items[i];
@@ -25,10 +25,8 @@ function shuffleArray(items) {
     items[j] = tmp;
   }
   return items;
-}
+};
 
-function generateString(strings) {
-  return strings[generateRandomInteger(0, strings.length - 1)];
-}
+const generateString = (strings) => strings[generateRandomInteger(0, strings.length - 1)];
 
 export { generateRandomInteger, checkMaxStringLength, generateString, shuffleArray };
