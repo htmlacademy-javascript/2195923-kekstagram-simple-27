@@ -44,6 +44,8 @@ function onCancelFormButtonClick() {
   closeModal();
 }
 
-photoUploadButton.addEventListener('change', onUploadPhotoButtonChange);
+const createEventFormHandlers = () => {
+  photoUploadButton.addEventListener('change', onUploadPhotoButtonChange);
+};
 
-
+export {createEventFormHandlers};

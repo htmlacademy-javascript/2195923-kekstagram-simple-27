@@ -1,2 +1,5 @@
-import './picture.js';
-import './form.js';
+import { createEventFormHandlers } from './form.js';
+import { renderPhotoCards} from './picture.js';
+
+renderPhotoCards();
+createEventFormHandlers();
