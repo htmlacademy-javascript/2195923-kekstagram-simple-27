@@ -1,10 +1,11 @@
-const photoUploadButton = document.querySelector('#upload-file');
-const photoEditForm = document.querySelector('.img-upload__overlay');
 const body = document.querySelector('body');
-const cancelFormButton = document.querySelector('#upload-cancel');
-const scalePhotoText = document.querySelector('.scale__control--value');
-const previewPhotoImg = document.querySelector('.img-upload__preview img');
-const descriptionPhotoText = document.querySelector('.text__description');
+const photoUploadButton = document.querySelector('#upload-file');
+
+const photoEditForm = document.querySelector('.img-upload__overlay');
+const cancelFormButton = photoEditForm.querySelector('#upload-cancel');
+const scalePhotoText = photoEditForm.querySelector('.scale__control--value');
+const previewPhotoImg = photoEditForm.querySelector('.img-upload__preview img');
+const descriptionPhotoText = photoEditForm.querySelector('.text__description');
 
 const resetFormData = () => {
   photoUploadButton.value = '';
