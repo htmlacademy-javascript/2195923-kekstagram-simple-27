@@ -10,10 +10,18 @@ const descriptionPhotoText = photoEditForm.querySelector('.text__description');
 const zoomOutPhotoButton = photoEditForm.querySelector('.scale__control--smaller');
 const zoomInPhotoButton = photoEditForm.querySelector('.scale__control--bigger');
 
+const effectsList = photoEditForm.querySelector('.effects__list');
+
+const replaceClass = (newClass) => {
+  previewPhotoImg.classList.remove(previewPhotoImg.classList.value);
+  previewPhotoImg.classList.add(newClass);
+};
+
 const resetFormData = () => {
   photoUploadButton.value = '';
   scalePhotoText.value = '100%';
-  previewPhotoImg.classList.replace(previewPhotoImg.classList.item[0], 'effects__preview--none');
+  previewPhotoImg.style.transform = 'scale(1)';
+  replaceClass('effects__preview--none');
   descriptionPhotoText.textContent = '';
 };
 
@@ -57,6 +65,30 @@ zoomInPhotoButton.addEventListener('click', () => {
   if (scalePhotoInteger < 100) {
     scalePhotoText.value = `${scalePhotoInteger + 25}%`;
     previewPhotoImg.style.transform = `scale(${(scalePhotoInteger + 25) / 100})`;
+  }
+});
+
+effectsList.addEventListener('change', (evt) => {
+  const idEffect = evt.target.id;
+  switch(idEffect) {
+    case 'effect-none':
+      replaceClass('effects__preview--none');
+      break;
+    case 'effect-chrome':
+      replaceClass('effects__preview--chrome');
+      break;
+    case 'effect-sepia':
+      replaceClass('effects__preview--sepia');
+      break;
+    case 'effect-marvin':
+      replaceClass('effects__preview--marvin');
+      break;
+    case 'effect-phobos':
+      replaceClass('effects__preview--phobos');
+      break;
+    case 'effect-heat':
+      replaceClass('effects__preview--heat');
+      break;
   }
 });
 
