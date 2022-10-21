@@ -10,7 +10,7 @@ const descriptionPhotoText = photoEditForm.querySelector('.text__description');
 const resetFormData = () => {
   photoUploadButton.value = '';
   scalePhotoText.value = '100%';
-  previewPhotoImg.classList.replace('effects__preview--none');
+  previewPhotoImg.classList.replace(previewPhotoImg.classList.item[0], 'effects__preview--none');
   descriptionPhotoText.textContent = '';
 };
 
