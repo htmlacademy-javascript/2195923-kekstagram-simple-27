@@ -14,35 +14,27 @@ const resetFormData = () => {
   descriptionPhotoText.textContent = '';
 };
 
-const openModal = () => {
+const onModalEscKeydown = (evt) => {
+  if (evt.key === 'Escape') {
+    onCancelFormButtonClick();
+  }
+};
+
+function onUploadPhotoButtonChange() {
   photoEditForm.classList.remove('hidden');
   body.classList.add('modal-open');
   cancelFormButton.addEventListener('click', onCancelFormButtonClick);
   document.addEventListener('keydown', onModalEscKeydown);
   photoUploadButton.removeEventListener('change', onUploadPhotoButtonChange);
-};
+}
 
-const closeModal = () => {
+function onCancelFormButtonClick() {
   photoEditForm.classList.add('hidden');
   body.classList.remove('modal-open');
   resetFormData();
   cancelFormButton.removeEventListener('click', onCancelFormButtonClick);
   document.removeEventListener('keydown', onModalEscKeydown);
   photoUploadButton.addEventListener('change', onUploadPhotoButtonChange);
-};
-
-function onModalEscKeydown(evt) {
-  if (evt.key === 'Escape') {
-    closeModal();
-  }
-}
-
-function onUploadPhotoButtonChange() {
-  openModal();
-}
-
-function onCancelFormButtonClick() {
-  closeModal();
 }
 
 const createEventFormHandlers = () => {
