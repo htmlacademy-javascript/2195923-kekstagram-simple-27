@@ -7,6 +7,9 @@ const scalePhotoText = photoEditForm.querySelector('.scale__control--value');
 const previewPhotoImg = photoEditForm.querySelector('.img-upload__preview img');
 const descriptionPhotoText = photoEditForm.querySelector('.text__description');
 
+const zoomOutPhotoButton = photoEditForm.querySelector('.scale__control--smaller');
+const zoomInPhotoButton = photoEditForm.querySelector('.scale__control--bigger');
+
 const resetFormData = () => {
   photoUploadButton.value = '';
   scalePhotoText.value = '100%';
@@ -40,5 +43,21 @@ function onCancelFormButtonClick() {
 const createEventFormHandlers = () => {
   photoUploadButton.addEventListener('change', onUploadPhotoButtonChange);
 };
+
+zoomOutPhotoButton.addEventListener('click', () => {
+  const scalePhotoInteger = parseInt(scalePhotoText.value, 10);
+  if (scalePhotoInteger > 25) {
+    scalePhotoText.value = `${scalePhotoInteger - 25}%`;
+    previewPhotoImg.style.transform = `scale(${(scalePhotoInteger - 25) / 100})`;
+  }
+});
+
+zoomInPhotoButton.addEventListener('click', () => {
+  const scalePhotoInteger = parseInt(scalePhotoText.value, 10);
+  if (scalePhotoInteger < 100) {
+    scalePhotoText.value = `${scalePhotoInteger + 25}%`;
+    previewPhotoImg.style.transform = `scale(${(scalePhotoInteger + 25) / 100})`;
+  }
+});
 
 export {createEventFormHandlers};
