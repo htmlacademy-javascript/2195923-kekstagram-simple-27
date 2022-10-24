@@ -11,6 +11,18 @@ const zoomOutPhotoButton = photoEditForm.querySelector('.scale__control--smaller
 const zoomInPhotoButton = photoEditForm.querySelector('.scale__control--bigger');
 
 const effectsList = photoEditForm.querySelector('.effects__list');
+const sliderElement = document.querySelector('.effect-level__slider');
+const effectLevelInput = document.querySelector('.effect-level__value');
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: 1,
+  },
+  start: 1,
+  step: 0.1,
+  connect: 'lower',
+});
 
 const replaceClass = (newClass) => {
   previewPhotoImg.classList.remove(previewPhotoImg.classList.value);
@@ -25,6 +37,22 @@ const resetFormData = () => {
   descriptionPhotoText.textContent = '';
 };
 
+const onZoomOutPhotoButtonClick = () => {
+  const scalePhotoInteger = parseInt(scalePhotoText.value, 10);
+  if (scalePhotoInteger > 25) {
+    scalePhotoText.value = `${scalePhotoInteger - 25}%`;
+    previewPhotoImg.style.transform = `scale(${(scalePhotoInteger - 25) / 100})`;
+  }
+};
+
+const onZoomInPhotoButtonClick = () => {
+  const scalePhotoInteger = parseInt(scalePhotoText.value, 10);
+  if (scalePhotoInteger < 100) {
+    scalePhotoText.value = `${scalePhotoInteger + 25}%`;
+    previewPhotoImg.style.transform = `scale(${(scalePhotoInteger + 25) / 100})`;
+  }
+};
+
 const onModalEscKeydown = (evt) => {
   if (evt.key === 'Escape') {
     onCancelFormButtonClick();
@@ -36,6 +64,9 @@ function onUploadPhotoButtonChange() {
   body.classList.add('modal-open');
   cancelFormButton.addEventListener('click', onCancelFormButtonClick);
   document.addEventListener('keydown', onModalEscKeydown);
+  zoomOutPhotoButton.addEventListener('click', onZoomOutPhotoButtonClick);
+  zoomInPhotoButton.addEventListener('click', onZoomInPhotoButtonClick);
+
   photoUploadButton.removeEventListener('change', onUploadPhotoButtonChange);
 }
 
@@ -43,65 +74,106 @@ function onCancelFormButtonClick() {
   photoEditForm.classList.add('hidden');
   body.classList.remove('modal-open');
   resetFormData();
+  sliderElement.noUiSlider.destroy();
   cancelFormButton.removeEventListener('click', onCancelFormButtonClick);
   document.removeEventListener('keydown', onModalEscKeydown);
+  zoomOutPhotoButton.removeEventListener('click', onZoomOutPhotoButtonClick);
+  zoomInPhotoButton.removeEventListener('click', onZoomInPhotoButtonClick);
+
   photoUploadButton.addEventListener('change', onUploadPhotoButtonChange);
 }
-
-const createEventFormHandlers = () => {
-  photoUploadButton.addEventListener('change', onUploadPhotoButtonChange);
-};
-
-zoomOutPhotoButton.addEventListener('click', () => {
-  const scalePhotoInteger = parseInt(scalePhotoText.value, 10);
-  if (scalePhotoInteger > 25) {
-    scalePhotoText.value = `${scalePhotoInteger - 25}%`;
-    previewPhotoImg.style.transform = `scale(${(scalePhotoInteger - 25) / 100})`;
-  }
-});
-
-zoomInPhotoButton.addEventListener('click', () => {
-  const scalePhotoInteger = parseInt(scalePhotoText.value, 10);
-  if (scalePhotoInteger < 100) {
-    scalePhotoText.value = `${scalePhotoInteger + 25}%`;
-    previewPhotoImg.style.transform = `scale(${(scalePhotoInteger + 25) / 100})`;
-  }
-});
 
 effectsList.addEventListener('change', (evt) => {
   const idEffect = evt.target.id;
   switch(idEffect) {
-    case 'effect-none':
-      replaceClass('effects__preview--none');
-      break;
     case 'effect-chrome':
       replaceClass('effects__preview--chrome');
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 1
+        },
+        start: 1,
+        step: 0.1
+      });
       break;
     case 'effect-sepia':
       replaceClass('effects__preview--sepia');
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 1
+        },
+        start: 1,
+        step: 0.1
+      });
       break;
     case 'effect-marvin':
       replaceClass('effects__preview--marvin');
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 100
+        },
+        start: 100,
+        step: 1
+      });
       break;
     case 'effect-phobos':
       replaceClass('effects__preview--phobos');
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 3
+        },
+        start: 3,
+        step: 0.1
+      });
       break;
     case 'effect-heat':
       replaceClass('effects__preview--heat');
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: 1,
+          max: 3
+        },
+        start: 3,
+        step: 0.1
+      });
+      break;
+    case 'effect-none':
+      replaceClass('effects__preview--none');
+      previewPhotoImg.removeAttribute('style');
       break;
   }
 });
 
-const sliderElement = document.querySelector('.effect-level__slider');
-
-noUiSlider.create(sliderElement, {
-  range: {
-    min: 0,
-    max: 100,
-  },
-  start: 80,
-  step: 1,
-  connect: 'lower',
+sliderElement.noUiSlider.on('update', () => {
+  effectLevelInput.value = sliderElement.noUiSlider.get();
+  const classEffect = previewPhotoImg.classList.value;
+  switch(classEffect) {
+    case 'effects__preview--none':
+      break;
+    case 'effects__preview--chrome':
+      previewPhotoImg.style.filter = `grayscale(${effectLevelInput.value})`;
+      break;
+    case 'effects__preview--sepia':
+      previewPhotoImg.style.filter = `sepia(${effectLevelInput.value})`;
+      break;
+    case 'effects__preview--marvin':
+      previewPhotoImg.style.filter = `invert(${effectLevelInput.value}%)`;
+      break;
+    case 'effects__preview--phobos':
+      previewPhotoImg.style.filter = `blur(${effectLevelInput.value}px)`;
+      break;
+    case 'effects__preview--heat':
+      previewPhotoImg.style.filter = `brightness(${effectLevelInput.value})`;
+      break;
+  }
 });
+
+const createEventFormHandlers = () => {
+  photoUploadButton.addEventListener('change', onUploadPhotoButtonChange);
+};
 
 export {createEventFormHandlers};
