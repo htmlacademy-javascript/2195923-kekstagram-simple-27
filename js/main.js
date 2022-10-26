@@ -1,5 +1,7 @@
 import { createEventFormHandlers } from './form.js';
 import { renderPhotoCards} from './picture.js';
+import { getData } from './network.js';
+import { showAlert } from './util.js';
 
-renderPhotoCards();
+getData(renderPhotoCards, showAlert);
 createEventFormHandlers();

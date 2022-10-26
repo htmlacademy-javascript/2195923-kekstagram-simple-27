@@ -1,5 +1,3 @@
-import { createPhotos } from './data.js';
-
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
 const pictureListFragment = document.createDocumentFragment();
@@ -12,8 +10,7 @@ const createPhotoCard = (photo) => {
   pictureListFragment.append(pictureElement);
 };
 
-const renderPhotoCards = () => {
-  const photos = createPhotos();
+const renderPhotoCards = (photos) => {
   photos.forEach(createPhotoCard);
   picturesContainer.append(pictureListFragment);
 };

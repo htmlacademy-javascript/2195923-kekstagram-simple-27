@@ -11,11 +11,14 @@ const getData = (onSuccess, onFail) => {
 };
 
 const sendData = (onSuccess, onFail, body) => {
+  const headers = new Headers();
+  headers.append('Content-Type', 'multipart/form-data');
+
   fetch(
     'https://27.javascript.pages.academy/kekstagram-simple',
     {
       method: 'POST',
-      headers: {'Content-type': 'multipart/form-data'},
+      //headers: headers,
       body,
     },
   )

@@ -1,3 +1,5 @@
+import { sendData } from './network.js';
+
 const body = document.querySelector('body');
 const photoUploadButton = document.querySelector('#upload-file');
 
@@ -14,6 +16,13 @@ const effectsList = photoEditForm.querySelector('.effects__list');
 const sliderElement = document.querySelector('.effect-level__slider');
 const effectLevelInput = document.querySelector('.effect-level__value');
 const sliderFieldset = document.querySelector('.img-upload__effect-level');
+
+const imgUploadForm = document.querySelector('#upload-select-image');
+const imgUploadSubmit = imgUploadForm.querySelector('#upload-submit');
+
+const successModalTemplate = document.querySelector('#success').content.querySelector('.success');
+const errorModalTemplate = document.querySelector('#error').content.querySelector('.error');
+
 
 const ScaleParameter = {
   MIN: 25,
@@ -123,6 +132,23 @@ const onEffectsListChange = (evt) => {
   }
 };
 
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  imgUploadSubmit.setAttribute('disabled', '');
+  sendData(
+    () => {
+      resetFormData();
+      imgUploadSubmit.removeAttribute('disabled', '');
+      const successModal = successModalTemplate.cloneNode(true);
+      body.append(successModal);
+    },
+    () => {
+      const errorModal = errorModalTemplate.cloneNode(true);
+      body.append(errorModal);
+    },
+    new FormData(evt.target));
+};
+
 function onUploadPhotoButtonChange() {
   photoEditForm.classList.remove('hidden');
   body.classList.add('modal-open');
@@ -133,6 +159,7 @@ function onUploadPhotoButtonChange() {
   zoomOutPhotoButton.addEventListener('click', onZoomOutPhotoButtonClick);
   zoomInPhotoButton.addEventListener('click', onZoomInPhotoButtonClick);
   effectsList.addEventListener('change', onEffectsListChange);
+  imgUploadForm.addEventListener('submit', onFormSubmit);
 
   photoUploadButton.removeEventListener('change', onUploadPhotoButtonChange);
 
