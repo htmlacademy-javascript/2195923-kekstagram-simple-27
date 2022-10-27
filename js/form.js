@@ -22,7 +22,7 @@ const imgUploadSubmit = imgUploadForm.querySelector('#upload-submit');
 
 const successModalTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorModalTemplate = document.querySelector('#error').content.querySelector('.error');
-
+//const effectNoneRadioInput = effectsList.querySelector('#effect-none');
 
 const ScaleParameter = {
   MIN: 25,
@@ -40,7 +40,7 @@ const resetFormData = () => {
   scalePhotoText.value = '100%';
   previewPhotoImg.removeAttribute('style');
   replaceClass('effects__preview--none');
-  descriptionPhotoText.textContent = '';
+  descriptionPhotoText.value = '';
 };
 
 const onZoomOutPhotoButtonClick = () => {
@@ -132,18 +132,75 @@ const onEffectsListChange = (evt) => {
   }
 };
 
+const onSuccessModalEscKeydown = (evt) => {
+  if (evt.key === 'Escape') {
+    onSuccessModalButtonClick();
+  }
+};
+
+const onOutsideSuccessModalClick = (evt) => {
+  const successInnerModal = document.querySelector('.success__inner');
+  if (!(evt.target === successInnerModal) && !successInnerModal.contains(evt.target)) {
+    onSuccessModalButtonClick();
+  }
+};
+
+function onSuccessModalButtonClick() {
+  const successModal = document.querySelector('.success');
+  const successModalButton = successModal.querySelector('.success__button');
+  successModal.remove();
+  onCancelFormButtonClick();
+  successModalButton.removeEventListener('click', onSuccessModalButtonClick);
+  document.removeEventListener('keydown', onSuccessModalEscKeydown);
+  document.removeEventListener('click', onOutsideSuccessModalClick);
+  document.addEventListener('keydown', onModalEscKeydown);
+}
+
+const onErrorModalEscKeydown = (evt) => {
+  if (evt.key === 'Escape') {
+    onErrorModalButtonClick();
+  }
+};
+
+const onOutsideErrorModalClick = (evt) => {
+  const errorInnerModal = document.querySelector('.error__inner');
+  if (!(evt.target === errorInnerModal) && !errorInnerModal.contains(evt.target)) {
+    onErrorModalButtonClick();
+  }
+};
+
+function onErrorModalButtonClick() {
+  const errorModal = document.querySelector('.error');
+  const errorModalButton = errorModal.querySelector('.error__button');
+  errorModal.remove();
+  errorModalButton.removeEventListener('click', onErrorModalButtonClick);
+  document.removeEventListener('keydown', onErrorModalEscKeydown);
+  document.removeEventListener('click', onOutsideErrorModalClick);
+  document.addEventListener('keydown', onModalEscKeydown);
+}
+
 const onFormSubmit = (evt) => {
   evt.preventDefault();
   imgUploadSubmit.setAttribute('disabled', '');
   sendData(
     () => {
-      resetFormData();
       imgUploadSubmit.removeAttribute('disabled', '');
       const successModal = successModalTemplate.cloneNode(true);
+      const successModalButton = successModal.querySelector('.success__button');
+      successModalButton.addEventListener('click', onSuccessModalButtonClick);
+      document.addEventListener('keydown', onSuccessModalEscKeydown);
+      document.addEventListener('click', onOutsideSuccessModalClick);
+      document.removeEventListener('keydown', onModalEscKeydown);
       body.append(successModal);
     },
     () => {
+      imgUploadSubmit.removeAttribute('disabled', '');
       const errorModal = errorModalTemplate.cloneNode(true);
+      const errorModalButton = errorModal.querySelector('.error__button');
+      errorModalButton.addEventListener('click', onErrorModalButtonClick);
+      document.addEventListener('keydown', onErrorModalEscKeydown);
+      document.addEventListener('click', onOutsideErrorModalClick);
+      document.removeEventListener('keydown', onModalEscKeydown);
       body.append(errorModal);
     },
     new FormData(evt.target));
