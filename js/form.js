@@ -148,12 +148,12 @@ const onOutsideSuccessModalClick = (evt) => {
 function onSuccessModalButtonClick() {
   const successModal = document.querySelector('.success');
   const successModalButton = successModal.querySelector('.success__button');
-  successModal.remove();
-  onCancelFormButtonClick();
   successModalButton.removeEventListener('click', onSuccessModalButtonClick);
+  successModal.remove();
   document.removeEventListener('keydown', onSuccessModalEscKeydown);
   document.removeEventListener('click', onOutsideSuccessModalClick);
   document.addEventListener('keydown', onModalEscKeydown);
+  onCancelFormButtonClick();
 }
 
 const onErrorModalEscKeydown = (evt) => {
@@ -172,8 +172,8 @@ const onOutsideErrorModalClick = (evt) => {
 function onErrorModalButtonClick() {
   const errorModal = document.querySelector('.error');
   const errorModalButton = errorModal.querySelector('.error__button');
-  errorModal.remove();
   errorModalButton.removeEventListener('click', onErrorModalButtonClick);
+  errorModal.remove();
   document.removeEventListener('keydown', onErrorModalEscKeydown);
   document.removeEventListener('click', onOutsideErrorModalClick);
   document.addEventListener('keydown', onModalEscKeydown);
