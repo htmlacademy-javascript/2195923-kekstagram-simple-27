@@ -11,8 +11,8 @@ const getData = (onSuccess, onFail) => {
 };
 
 const sendData = (onSuccess, onFail, body) => {
-  const headers = new Headers();
-  headers.append('Content-Type', 'multipart/form-data');
+  // const headers = new Headers();
+  // headers.append('Content-Type', 'multipart/form-data');
 
   fetch(
     'https://27.javascript.pages.academy/kekstagram-simple',
@@ -26,11 +26,11 @@ const sendData = (onSuccess, onFail, body) => {
       if (response.ok) {
         onSuccess();
       } else {
-        onFail('Не удалось отправить форму. Попробуйте ещё раз');
+        onFail();
       }
     })
     .catch(() => {
-      onFail('Не удалось отправить форму. Попробуйте ещё раз');
+      onFail();
     });
 };
 

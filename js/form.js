@@ -1,4 +1,7 @@
 import { sendData } from './network.js';
+import { classEffectToIdEffect, idEffectToClassEffect } from './util.js';
+
+const DEFAULT_SCALE_PHOTO = '100%';
 
 const body = document.querySelector('body');
 const photoUploadButton = document.querySelector('#upload-file');
@@ -30,6 +33,57 @@ const ScaleParameter = {
   STEP: 25,
 };
 
+const EffectSettings = {
+  'effect-none': {
+    effect: ['none', '']
+  },
+  'effect-chrome': {
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: 0.1,
+    effect: ['grayscale', ''],
+  },
+  'effect-sepia': {
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: 0.1,
+    effect: ['sepia', '']
+  },
+  'effect-marvin': {
+    range: {
+      min: 0,
+      max: 100,
+    },
+    start: 100,
+    step: 1,
+    effect: ['invert', '%']
+  },
+  'effect-phobos': {
+    range: {
+      min: 0,
+      max: 3,
+    },
+    start: 3,
+    step: 0.1,
+    effect: ['blur', 'px']
+  },
+  'effect-heat': {
+    range: {
+      min: 1,
+      max: 3,
+    },
+    start: 3,
+    step: 0.1,
+    effect: ['brightness', '']
+  },
+};
+
 const replaceClass = (newClass) => {
   previewPhotoImg.classList.remove(previewPhotoImg.classList.value);
   previewPhotoImg.classList.add(newClass);
@@ -37,9 +91,9 @@ const replaceClass = (newClass) => {
 
 const resetFormData = () => {
   photoUploadButton.value = '';
-  scalePhotoText.value = '100%';
+  scalePhotoText.value = DEFAULT_SCALE_PHOTO;
   previewPhotoImg.removeAttribute('style');
-  replaceClass('effects__preview--none');
+  replaceClass(idEffectToClassEffect('effect-none'));
   descriptionPhotoText.value = '';
 };
 
@@ -68,67 +122,12 @@ const onModalEscKeydown = (evt) => {
 const onEffectsListChange = (evt) => {
   const idEffect = evt.target.id;
   sliderFieldset.classList.remove('visually-hidden');
-  switch(idEffect) {
-    case 'effect-chrome':
-      replaceClass('effects__preview--chrome');
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 1
-        },
-        start: 1,
-        step: 0.1
-      });
-      break;
-    case 'effect-sepia':
-      replaceClass('effects__preview--sepia');
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 1
-        },
-        start: 1,
-        step: 0.1
-      });
-      break;
-    case 'effect-marvin':
-      replaceClass('effects__preview--marvin');
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 100
-        },
-        start: 100,
-        step: 1
-      });
-      break;
-    case 'effect-phobos':
-      replaceClass('effects__preview--phobos');
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 3
-        },
-        start: 3,
-        step: 0.1
-      });
-      break;
-    case 'effect-heat':
-      replaceClass('effects__preview--heat');
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: 1,
-          max: 3
-        },
-        start: 3,
-        step: 0.1
-      });
-      break;
-    case 'effect-none':
-      replaceClass('effects__preview--none');
-      previewPhotoImg.style.filter = 'none';
-      sliderFieldset.classList.add('visually-hidden');
-      break;
+  replaceClass(idEffectToClassEffect(idEffect));
+  if (idEffect === 'effect-none') {
+    previewPhotoImg.style.filter = EffectSettings[idEffect].effect;
+    sliderFieldset.classList.add('visually-hidden');
+  } else {
+    sliderElement.noUiSlider.updateOptions(EffectSettings[idEffect]);
   }
 };
 
@@ -179,31 +178,32 @@ function onErrorModalButtonClick() {
   document.addEventListener('keydown', onModalEscKeydown);
 }
 
+const onSuccessSendData = () => {
+  imgUploadSubmit.removeAttribute('disabled', '');
+  const successModal = successModalTemplate.cloneNode(true);
+  const successModalButton = successModal.querySelector('.success__button');
+  successModalButton.addEventListener('click', onSuccessModalButtonClick);
+  document.addEventListener('keydown', onSuccessModalEscKeydown);
+  document.addEventListener('click', onOutsideSuccessModalClick);
+  document.removeEventListener('keydown', onModalEscKeydown);
+  body.append(successModal);
+};
+
+const onErrorSendData = () => {
+  imgUploadSubmit.removeAttribute('disabled', '');
+  const errorModal = errorModalTemplate.cloneNode(true);
+  const errorModalButton = errorModal.querySelector('.error__button');
+  errorModalButton.addEventListener('click', onErrorModalButtonClick);
+  document.addEventListener('keydown', onErrorModalEscKeydown);
+  document.addEventListener('click', onOutsideErrorModalClick);
+  document.removeEventListener('keydown', onModalEscKeydown);
+  body.append(errorModal);
+};
+
 const onFormSubmit = (evt) => {
   evt.preventDefault();
   imgUploadSubmit.setAttribute('disabled', '');
-  sendData(
-    () => {
-      imgUploadSubmit.removeAttribute('disabled', '');
-      const successModal = successModalTemplate.cloneNode(true);
-      const successModalButton = successModal.querySelector('.success__button');
-      successModalButton.addEventListener('click', onSuccessModalButtonClick);
-      document.addEventListener('keydown', onSuccessModalEscKeydown);
-      document.addEventListener('click', onOutsideSuccessModalClick);
-      document.removeEventListener('keydown', onModalEscKeydown);
-      body.append(successModal);
-    },
-    () => {
-      imgUploadSubmit.removeAttribute('disabled', '');
-      const errorModal = errorModalTemplate.cloneNode(true);
-      const errorModalButton = errorModal.querySelector('.error__button');
-      errorModalButton.addEventListener('click', onErrorModalButtonClick);
-      document.addEventListener('keydown', onErrorModalEscKeydown);
-      document.addEventListener('click', onOutsideErrorModalClick);
-      document.removeEventListener('keydown', onModalEscKeydown);
-      body.append(errorModal);
-    },
-    new FormData(evt.target));
+  sendData(onSuccessSendData, onErrorSendData, new FormData(evt.target));
 };
 
 function onUploadPhotoButtonChange() {
@@ -225,7 +225,7 @@ function onUploadPhotoButtonChange() {
       min: 0,
       max: 100,
     },
-    start: 80,
+    start: 0,
     step: 1,
     connect: 'lower',
   });
@@ -233,24 +233,9 @@ function onUploadPhotoButtonChange() {
   sliderElement.noUiSlider.on('update', () => {
     effectLevelInput.value = sliderElement.noUiSlider.get();
     const classEffect = previewPhotoImg.classList.value;
-    switch(classEffect) {
-      case 'effects__preview--none':
-        break;
-      case 'effects__preview--chrome':
-        previewPhotoImg.style.filter = `grayscale(${effectLevelInput.value})`;
-        break;
-      case 'effects__preview--sepia':
-        previewPhotoImg.style.filter = `sepia(${effectLevelInput.value})`;
-        break;
-      case 'effects__preview--marvin':
-        previewPhotoImg.style.filter = `invert(${effectLevelInput.value}%)`;
-        break;
-      case 'effects__preview--phobos':
-        previewPhotoImg.style.filter = `blur(${effectLevelInput.value}px)`;
-        break;
-      case 'effects__preview--heat':
-        previewPhotoImg.style.filter = `brightness(${effectLevelInput.value})`;
-        break;
+    const idEffect = classEffectToIdEffect(classEffect);
+    if (idEffect !== 'effect-none') {
+      previewPhotoImg.style.filter = `${EffectSettings[idEffect].effect[0]}(${effectLevelInput.value}${EffectSettings[idEffect].effect[1]})`;
     }
   });
 }

@@ -50,4 +50,11 @@ const showAlert = (message) => {
   }, 4000);
 };
 
-export { generateRandomInteger, checkMaxStringLength, generateString, shuffleArray, showAlert };
+const classEffectToIdEffect = (classEffect) => classEffect.replace('s__preview-', '');
+
+const idEffectToClassEffect = (idEffect) => {
+  const separateStringIdEffect = idEffect.split('-');
+  return `${separateStringIdEffect[0]}s__preview--${separateStringIdEffect[1]}`;
+};
+
+export { generateRandomInteger, checkMaxStringLength, generateString, shuffleArray, showAlert, classEffectToIdEffect, idEffectToClassEffect };
