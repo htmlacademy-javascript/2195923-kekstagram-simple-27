@@ -25,7 +25,7 @@ const imgUploadSubmit = imgUploadForm.querySelector('#upload-submit');
 
 const successModalTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorModalTemplate = document.querySelector('#error').content.querySelector('.error');
-//const effectNoneRadioInput = effectsList.querySelector('#effect-none');
+const effectNoneRadioInput = effectsList.querySelector('#effect-none');
 
 const ScaleParameter = {
   MIN: 25,
@@ -95,6 +95,7 @@ const resetFormData = () => {
   previewPhotoImg.removeAttribute('style');
   replaceClass(idEffectToClassEffect('effect-none'));
   descriptionPhotoText.value = '';
+  effectNoneRadioInput.checked = true;
 };
 
 const onZoomOutPhotoButtonClick = () => {
@@ -124,7 +125,7 @@ const onEffectsListChange = (evt) => {
   sliderFieldset.classList.remove('visually-hidden');
   replaceClass(idEffectToClassEffect(idEffect));
   if (idEffect === 'effect-none') {
-    previewPhotoImg.style.filter = EffectSettings[idEffect].effect;
+    previewPhotoImg.style.filter = EffectSettings[idEffect].effect[0];
     sliderFieldset.classList.add('visually-hidden');
   } else {
     sliderElement.noUiSlider.updateOptions(EffectSettings[idEffect]);
