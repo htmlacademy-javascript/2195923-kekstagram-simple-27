@@ -14,14 +14,10 @@ const getData = (onSuccess, onFail) => {
 };
 
 const sendData = (onSuccess, onFail, body) => {
-  // const headers = new Headers();
-  // headers.append('Content-Type', 'multipart/form-data');
-
   fetch(
     SEND_DATA_URL,
     {
       method: 'POST',
-      //headers: headers,
       body,
     },
   )
