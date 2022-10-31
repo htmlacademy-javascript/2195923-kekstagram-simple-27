@@ -1,4 +1,4 @@
-const SEND_DATA_URL = 'https://27.javascript.pages.academy/kekstagram-simple2';
+const SEND_DATA_URL = 'https://27.javascript.pages.academy/kekstagram-simple';
 const GET_DATA_URL = 'https://27.javascript.pages.academy/kekstagram-simple/data';
 
 const getData = (onSuccess, onFail) => {
