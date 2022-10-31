@@ -1,13 +1,16 @@
+const SEND_DATA_URL = 'https://27.javascript.pages.academy/kekstagram-simple2';
+const GET_DATA_URL = 'https://27.javascript.pages.academy/kekstagram-simple/data';
+
 const getData = (onSuccess, onFail) => {
-  fetch('https://27.javascript.pages.academy/kekstagram-simple/data')
+  fetch(GET_DATA_URL)
     .then((response) => {
       if (response.ok) {
         return response.json();
       }
       throw new Error(`${response.status} — ${response.statusText}`);
     })
-    .then((data) => onSuccess(data))
-    .catch((error) => onFail(error));
+    .then(onSuccess)
+    .catch(onFail);
 };
 
 const sendData = (onSuccess, onFail, body) => {
@@ -15,7 +18,7 @@ const sendData = (onSuccess, onFail, body) => {
   // headers.append('Content-Type', 'multipart/form-data');
 
   fetch(
-    'https://27.javascript.pages.academy/kekstagram-simple',
+    SEND_DATA_URL,
     {
       method: 'POST',
       //headers: headers,
