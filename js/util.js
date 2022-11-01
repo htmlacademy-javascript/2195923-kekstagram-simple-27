@@ -57,4 +57,9 @@ const idEffectToClassEffect = (idEffect) => {
   return `${separateStringIdEffect[0]}s__preview--${separateStringIdEffect[1]}`;
 };
 
-export { generateRandomInteger, checkMaxStringLength, generateString, shuffleArray, showAlert, classEffectToIdEffect, idEffectToClassEffect };
+const replaceClass = (object, newClass) => {
+  object.classList.remove(object.classList.value);
+  object.classList.add(newClass);
+};
+
+export { generateRandomInteger, checkMaxStringLength, generateString, shuffleArray, showAlert, classEffectToIdEffect, idEffectToClassEffect, replaceClass };

@@ -1,6 +1,7 @@
 import { sendData } from './network.js';
-import { classEffectToIdEffect, idEffectToClassEffect } from './util.js';
+import { classEffectToIdEffect, idEffectToClassEffect, replaceClass } from './util.js';
 import { openSuccessModal, openErrorModal } from './modal.js';
+import { getScaleParameters, getEffectSettings} from './constants.js';
 
 const DEFAULT_SCALE_PHOTO = '100%';
 
@@ -26,90 +27,31 @@ const imgUploadSubmit = imgUploadForm.querySelector('#upload-submit');
 
 const effectNoneRadioInput = effectsList.querySelector('#effect-none');
 
-const ScaleParameter = {
-  MIN: 25,
-  MAX: 100,
-  STEP: 25,
-};
-
-const EffectSettings = {
-  'effect-none': {
-    effect: ['none', '']
-  },
-  'effect-chrome': {
-    range: {
-      min: 0,
-      max: 1,
-    },
-    start: 1,
-    step: 0.1,
-    effect: ['grayscale', ''],
-  },
-  'effect-sepia': {
-    range: {
-      min: 0,
-      max: 1,
-    },
-    start: 1,
-    step: 0.1,
-    effect: ['sepia', '']
-  },
-  'effect-marvin': {
-    range: {
-      min: 0,
-      max: 100,
-    },
-    start: 100,
-    step: 1,
-    effect: ['invert', '%']
-  },
-  'effect-phobos': {
-    range: {
-      min: 0,
-      max: 3,
-    },
-    start: 3,
-    step: 0.1,
-    effect: ['blur', 'px']
-  },
-  'effect-heat': {
-    range: {
-      min: 1,
-      max: 3,
-    },
-    start: 3,
-    step: 0.1,
-    effect: ['brightness', '']
-  },
-};
-
-const replaceClass = (newClass) => {
-  previewPhotoImg.classList.remove(previewPhotoImg.classList.value);
-  previewPhotoImg.classList.add(newClass);
-};
+const scaleParameters = getScaleParameters();
+const effectSettings = getEffectSettings();
 
 const resetFormData = () => {
   photoUploadButton.value = '';
   scalePhotoText.value = DEFAULT_SCALE_PHOTO;
   previewPhotoImg.removeAttribute('style');
-  replaceClass(idEffectToClassEffect('effect-none'));
+  replaceClass(previewPhotoImg, idEffectToClassEffect('effect-none'));
   descriptionPhotoText.value = '';
   effectNoneRadioInput.checked = true;
 };
 
 const onZoomOutPhotoButtonClick = () => {
   const scalePhotoInteger = parseInt(scalePhotoText.value, 10);
-  if (scalePhotoInteger > ScaleParameter.MIN) {
-    scalePhotoText.value = `${scalePhotoInteger - ScaleParameter.STEP}%`;
-    previewPhotoImg.style.transform = `scale(${(scalePhotoInteger - ScaleParameter.STEP) / 100})`;
+  if (scalePhotoInteger > scaleParameters.MIN) {
+    scalePhotoText.value = `${scalePhotoInteger - scaleParameters.STEP}%`;
+    previewPhotoImg.style.transform = `scale(${(scalePhotoInteger - scaleParameters.STEP) / 100})`;
   }
 };
 
 const onZoomInPhotoButtonClick = () => {
   const scalePhotoInteger = parseInt(scalePhotoText.value, 10);
-  if (scalePhotoInteger < ScaleParameter.MAX) {
-    scalePhotoText.value = `${scalePhotoInteger + ScaleParameter.STEP}%`;
-    previewPhotoImg.style.transform = `scale(${(scalePhotoInteger + ScaleParameter.STEP) / 100})`;
+  if (scalePhotoInteger < scaleParameters.MAX) {
+    scalePhotoText.value = `${scalePhotoInteger + scaleParameters.STEP}%`;
+    previewPhotoImg.style.transform = `scale(${(scalePhotoInteger + scaleParameters.STEP) / 100})`;
   }
 };
 
@@ -122,12 +64,12 @@ const onModalEscKeydown = (evt) => {
 const onEffectsListChange = (evt) => {
   const idEffect = evt.target.id;
   sliderFieldset.classList.remove('visually-hidden');
-  replaceClass(idEffectToClassEffect(idEffect));
+  replaceClass(previewPhotoImg, idEffectToClassEffect(idEffect));
   if (idEffect === 'effect-none') {
-    previewPhotoImg.style.filter = EffectSettings[idEffect].effect[0];
+    previewPhotoImg.style.filter = effectSettings[idEffect].effect[0];
     sliderFieldset.classList.add('visually-hidden');
   } else {
-    sliderElement.noUiSlider.updateOptions(EffectSettings[idEffect]);
+    sliderElement.noUiSlider.updateOptions(effectSettings[idEffect]);
   }
 };
 
@@ -178,7 +120,7 @@ function onUploadPhotoButtonChange() {
     const classEffect = previewPhotoImg.classList.value;
     const idEffect = classEffectToIdEffect(classEffect);
     if (idEffect !== 'effect-none') {
-      previewPhotoImg.style.filter = `${EffectSettings[idEffect].effect[0]}(${effectLevelInput.value}${EffectSettings[idEffect].effect[1]})`;
+      previewPhotoImg.style.filter = `${effectSettings[idEffect].effect[0]}(${effectLevelInput.value}${effectSettings[idEffect].effect[1]})`;
     }
   });
 }
