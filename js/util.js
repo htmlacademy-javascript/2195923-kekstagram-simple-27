@@ -1,3 +1,5 @@
+const TIME_SHOW_ALERT = 4000;
+
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = '100';
@@ -16,7 +18,7 @@ const showAlert = (message) => {
 
   setTimeout(() => {
     alertContainer.remove();
-  }, 4000);
+  }, TIME_SHOW_ALERT);
 };
 
 const classEffectToIdEffect = (classEffect) => classEffect.replace('s__preview-', '');
